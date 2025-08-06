@@ -1,0 +1,31 @@
+services:
+  mysql-db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: meinpasswort
+      MYSQL_DATABASE: platzhalter
+    networks:
+      - backend-database-net
+    volumes:
+      - mysql-example-data2:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: .
+    ports: 
+    - "3000:3000"
+    networks:
+      - backend-database-net
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      
+networks:
+  backend-database-net:
+    driver: bridge
+
+volumes:
+  mysql-example-data2:
