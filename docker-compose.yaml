@@ -19,12 +19,22 @@ services:
     - "3000:3000"
     networks:
       - backend-database-net
+      - backend-frontend-net
     depends_on:
       mysql-db:
         condition: service_healthy
-      
+
+  frontend:
+    build: ./frontendOrdner
+    ports: 
+    - "8080:80"
+    networks:
+      - backend-frontend-net
+
 networks:
   backend-database-net:
+    driver: bridge
+  backend-frontend-net:
     driver: bridge
 
 volumes:
